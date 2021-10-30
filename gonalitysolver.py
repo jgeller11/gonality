@@ -45,6 +45,7 @@ def solveDivisor(graph, divisor):
 
 # https://stackoverflow.com/questions/53561814/python-stars-and-bars
 
+# n+k-1 C k
 def placements(n,k):
     bars = [0 for i in range(n)]+[k+n]
     return [[bars[j+1] - bars[j] - 1 for j in range(n)] for bars[1:-1] in itertools.combinations(range(1, k+n), n-1)]
@@ -76,10 +77,22 @@ def findGonalityFaster(graph, symmetry=False):
     n = len(graph)
     fireList, mindegree=genFirelist(graph, True)
     for k in range(mindegree,n):
+        print(mindegree)
         solvable = set()
         unsolvable = set()
-        P = placements(n,k)
-        for p in P:
+        print("n:",n,"k:",k)
+        #P = placements(n,k)
+
+        count = 0
+        for tup in itertools.combinations_with_replacement(range(0,k+1),n-1):
+            count += 1
+            p = [tup[0]] + [0]*(n-1)
+            for e in range(1,n-1):
+                p[e] = tup[e]-tup[e-1]
+            p[n-1] = k-tup[n-2]
+
+            if (count % 10000 == 0):
+                print(count)
             acceptable = True
             for i in range(len(p)):
                 if acceptable:
@@ -186,8 +199,28 @@ def genHypercubeGraph(n):
 # is a cycle on three vertices, and
 # d = [2,1,-1]
 # is a divisor that places 2, 1, and -1 chips on the first, second, and third vertices respectively
-import time
-start = time.time()
-print(findGonalityFaster(genHypercubeGraph(5)))
-end = time.time()
-print(end - start)
+
+graph = genHypercubeGraph(5)
+# div = [0]*len(graph)
+# for vertex1 in range(len(graph)):
+#     for vertex2 in range(vertex1+1, len(graph)):
+#         for vertex3 in range(vertex2+1, len(graph)):
+#             for vertex4 in range(vertex3+1,len(graph)):
+#                 div[vertex1] = 20
+#                 div[vertex2] = 20
+#                 div[vertex3]= 20
+#                 div[vertex4] = -60
+#                 if(solveDivisor(graph, div)):
+#                     print("FOUND")
+#                 if (vertex4 == 63):
+#                     print(vertex1,vertex2,vertex3,vertex4)
+#                 div = [0]*len(graph)
+
+
+# print("done")
+print(findGonalityFaster(graph))
+
+
+
+
+
