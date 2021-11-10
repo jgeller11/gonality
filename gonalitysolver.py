@@ -13,10 +13,10 @@ def genFirelist(graph, getMinDegree=False):
         for i in range(len(fireList[r])):
             t-=fireList[r][i]
         fireList[r][r]=t
-        if t>mindegree:
+        if t>mindegree or mindegree==0:
             mindegree=t
     if getMinDegree:
-        return fireList, mindegree
+        return fireList, (-1)*mindegree
     return fireList
 
 # returns true if a divisor is effective
@@ -73,14 +73,14 @@ def findGonality(graph):
 
 # works similarly to findGonality, but track states seen so far in sets of "solvable" and "nonsolvable" to speed up calculations
 
-def findGonalityFaster(graph, symmetry=False):
+def findGonalityFaster(graph, suppressOutput=False,symmetry=False):
     n = len(graph)
     fireList, mindegree=genFirelist(graph, True)
     for k in range(mindegree,n):
-        print(mindegree)
         solvable = set()
         unsolvable = set()
-        print("n:",n,"k:",k)
+        if not suppressOutput:
+            print("n:",n,"k:",k)
         #P = placements(n,k)
 
         count = 0
@@ -91,14 +91,14 @@ def findGonalityFaster(graph, symmetry=False):
                 p[e] = tup[e]-tup[e-1]
             p[n-1] = k-tup[n-2]
 
-            if (count % 10000 == 0):
-                print(count)
+            if (count % 10000 == 0) and not suppressOutput:
+                print(str(count)+', s: '+str(len(solvable))+', u: '+str(len(unsolvable)))
             acceptable = True
             for i in range(len(p)):
                 if acceptable:
                     if p[i]==0:
                         tp = p.copy()
-                        tp[i]-=1
+                        tp[i]=-1
                         current = set()
                         unfired = set()
                         next = effective(tp)
@@ -133,6 +133,71 @@ def findGonalityFaster(graph, symmetry=False):
             if acceptable:
                 return k
     return 0
+
+def gonalityUpperBound(graph, k=0, suppressOutput=False,symmetry=False):
+    n = len(graph)
+    fireList, mindegree=genFirelist(graph, True)
+    if k == 0:
+        k = n
+    solvable = set()
+    unsolvable = set()
+    if not suppressOutput:
+        print("n:",n,"k:",k)
+    #P = placements(n,k)
+
+    count = 0
+    for tup in itertools.combinations_with_replacement(range(0,k+1),n-1):
+        count += 1
+        p = [tup[0]] + [0]*(n-1)
+        for e in range(1,n-1):
+            p[e] = tup[e]-tup[e-1]
+        p[n-1] = k-tup[n-2]
+
+        if (count % 10000 == 0) and not suppressOutput:
+            print(str(count)+', s: '+str(len(solvable))+', u: '+str(len(unsolvable)))
+        acceptable = True
+        for i in range(len(p)):
+            if acceptable:
+                if p[i]==0:
+                    tp = p.copy()
+                    tp[i]=-1
+                    current = set()
+                    unfired = set()
+                    next = effective(tp)
+                    while next > -1:
+                        if tuple(tp) in solvable:
+                            next = -1
+                        elif tuple(tp) in unsolvable:
+                            next = -2
+                            acceptable = False
+                            unsolvable |= current
+                        else:
+                            if symmetry:
+                                for i in range(len(tp)):
+                                    current.add(tuple(tp[i:]+tp[:i]))
+                            else:
+                                    current.add(tuple(tp))
+                            unfired.add(next)
+                            if len(unfired)==n:
+                                acceptable = False
+                                next = -2
+                                unsolvable |= current
+                            else:
+                                neg = -1
+                                for d in range(len(tp)):
+                                    tp[d]-=fireList[next][d]
+                                    if (tp[d] < 0):
+                                        neg = d
+                                next = neg
+                    if next == -1:
+                        solvable |= current
+
+        if acceptable:
+            print(str(k)+': '+str(tup))
+            return gonalityUpperBound(graph, k-1, suppressOutput)
+    print('none found, upper bound strict at '+str(k-1)+'!')
+    return 0
+
 
 # these functions all just generate adjacency matrices for different families of graphs
 
@@ -200,7 +265,8 @@ def genHypercubeGraph(n):
 # d = [2,1,-1]
 # is a divisor that places 2, 1, and -1 chips on the first, second, and third vertices respectively
 
-graph = genHypercubeGraph(5)
+# graph = genHypercubeGraph(4)
+# graph = genAntiPrismGraph(8)
 # div = [0]*len(graph)
 # for vertex1 in range(len(graph)):
 #     for vertex2 in range(vertex1+1, len(graph)):
@@ -218,7 +284,7 @@ graph = genHypercubeGraph(5)
 
 
 # print("done")
-print(findGonalityFaster(graph))
+# print(findGonalityFaster(graph))
 
 
 
