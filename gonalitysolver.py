@@ -1,7 +1,8 @@
 import copy
 import numpy as np
 import itertools
-
+import random
+import math
 # generates a list for each vertex which is the divisor reached from the all-zero
 #   divisor by firing that vertex.
 
@@ -148,13 +149,84 @@ def gonalityUpperBound(graph, k=0, suppressOutput=False,symmetry=False):
     count = 0
     for tup in itertools.combinations_with_replacement(range(0,k+1),n-1):
         count += 1
+        
+       
         p = [tup[0]] + [0]*(n-1)
         for e in range(1,n-1):
             p[e] = tup[e]-tup[e-1]
         p[n-1] = k-tup[n-2]
-
+        lol = True
+        for t in range(n):
+            if p[t]>=-1*fireList[t][t]:
+                lol=False
         if (count % 10000 == 0) and not suppressOutput:
-            print(str(count)+', s: '+str(len(solvable))+', u: '+str(len(unsolvable)))
+                print(str(count)+', s: '+str(len(solvable))+', u: '+str(len(unsolvable)))
+        if lol:
+            acceptable = True
+            for i in range(len(p)):
+                if acceptable:
+                    if p[i]==0:
+                        tp = p.copy()
+                        tp[i]=-1
+                        current = set()
+                        unfired = set()
+                        next = effective(tp)
+                        while next > -1:
+                            if tuple(tp) in solvable:
+                                next = -1
+                            elif tuple(tp) in unsolvable:
+                                next = -2
+                                acceptable = False
+                                unsolvable |= current
+                            else:
+                                if symmetry:
+                                    for i in range(len(tp)):
+                                        current.add(tuple(tp[i:]+tp[:i]))
+                                else:
+                                        current.add(tuple(tp))
+                                unfired.add(next)
+                                if len(unfired)==n:
+                                    acceptable = False
+                                    next = -2
+                                    unsolvable |= current
+                                else:
+                                    neg = -1
+                                    for d in range(len(tp)):
+                                        tp[d]-=fireList[next][d]
+                                        if (tp[d] < 0):
+                                            neg = d
+                                    next = neg
+                        if next == -1:
+                            solvable |= current
+
+            if acceptable:
+                print(str(k)+': '+str(tup))
+                return gonalityUpperBound(graph, k-1, suppressOutput)
+    print('none found, upper bound strict at '+str(k-1)+'!')
+    return 0
+
+def randomGonalityUpperBound(graph, k=0, suppressOutput=False):
+    n = len(graph)
+    fireList, mindegree=genFirelist(graph, True)
+    if k == 0:
+        k = n
+    if not suppressOutput:
+        print("n:",n,"k:",k)
+    #P = placements(n,k)
+
+    count = 0
+    while True:
+        p=[0 for i in range(n)]
+        for i in range(k):
+            p[math.floor(random.random()*k)]+=1
+        count += 1
+        tup = tuple(p)
+        for t in range(n):
+            if p[t]>=-1*fireList[t][t]:
+                lol=False
+        if (count % 10000 == 0) and not suppressOutput:
+                print(str(count))
+
         acceptable = True
         for i in range(len(p)):
             if acceptable:
@@ -165,36 +237,22 @@ def gonalityUpperBound(graph, k=0, suppressOutput=False,symmetry=False):
                     unfired = set()
                     next = effective(tp)
                     while next > -1:
-                        if tuple(tp) in solvable:
-                            next = -1
-                        elif tuple(tp) in unsolvable:
-                            next = -2
+                        current.add(tuple(tp))
+                        unfired.add(next)
+                        if len(unfired)==n:
                             acceptable = False
-                            unsolvable |= current
+                            next = -2
                         else:
-                            if symmetry:
-                                for i in range(len(tp)):
-                                    current.add(tuple(tp[i:]+tp[:i]))
-                            else:
-                                    current.add(tuple(tp))
-                            unfired.add(next)
-                            if len(unfired)==n:
-                                acceptable = False
-                                next = -2
-                                unsolvable |= current
-                            else:
-                                neg = -1
-                                for d in range(len(tp)):
-                                    tp[d]-=fireList[next][d]
-                                    if (tp[d] < 0):
-                                        neg = d
-                                next = neg
-                    if next == -1:
-                        solvable |= current
+                            neg = -1
+                            for d in range(len(tp)):
+                                tp[d]-=fireList[next][d]
+                                if (tp[d] < 0):
+                                    neg = d
+                            next = neg
 
         if acceptable:
             print(str(k)+': '+str(tup))
-            return gonalityUpperBound(graph, k-1, suppressOutput)
+            return randomGonalityUpperBound(graph, k-1, suppressOutput)
     print('none found, upper bound strict at '+str(k-1)+'!')
     return 0
 
