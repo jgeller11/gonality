@@ -1,11 +1,20 @@
-import gonalitysolver as gs
+import networkx as nx
+import matplotlib.pyplot as plt
 
-# nested_dict = { 'dictA': {'key_1': 'value_1'},
-#                 'dictB': {'key_2': 'value_2'}}
+def graphState(state, planar=True):
+    G = nx.Graph()
+    for i in range(len(state)):
+        G.add_node(i+1)
+    for x in state:
+        for y in state[x]:
+            G.add_edge(x,y)
+    if planar:
+        pos = nx.planar_layout(G)
+        nx.draw(G, with_labels=True, font_weight='bold', pos=pos)
+    else:
+        nx.draw(G, with_labels=True, font_weight='bold')
+    plt.show()
 
-
-
-# points are not borders!!!!! leads to nonplanar graphs
 
 def dictToGraph(d):
     n = len(d)
@@ -38,19 +47,7 @@ def check(d):
         if i in d[i]:
             print(str(i)+' points at self')
             return True
-    # print('all good!')
     return False
-
-# todo:
-#   - write up rest of states
-#   - implement f to create adj. matrices
-#   - implement f to prune leaves
-#   - implement checks to never place more chips than degree
-#       - coulld just be an if statement, should be clever selection
-#   - analyze by contracting bridges in some clever way?
-
-
-abbreviationStrings=['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
 
 AL = {
     1: {2, 7},
@@ -588,78 +585,5 @@ WY = {
     1: set()
 }
 
-# check(PA)
-
+abbreviationStrings=['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
 states=[AL,AK,AZ,AR,CA,CO,CT,DE,FL,GA,HI,ID,IL,IN,IA,KS,KY,LA,ME,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,OH,OK,OR,PA,RI,SC,SD,TN,TX,UT,VT,VA,WA,WV,WI,WY]
-
-# for c in range(len(states)):
-#     if check(states[c]):
-#         print(abbreviationStrings[c])
-
-# print(dictToGraph(WA))
-# print(pruneLeaves(dictToGraph(WA)))
-
-# print(str( gonalityUpperBound(pruneLeaves(dictToGraph(FL)),16,False)))
-# print(str( gs.randomGonalityUpperBound(pruneLeaves(dictToGraph(FL)),12,True)))
-# 16: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 4, 6, 7, 9, 13, 14)
-# 14: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 5, 5, 5, 7, 9, 12, 13)
-# 13: (0, 1, 0, 1, 1, 1, 1, 3, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-# for s in range(len(states)):
-#     # if len(states[s])==1 or len(pruneLeaves(dictToGraph(states[s])))==1:
-#         # print(abbreviationStrings[s]+': 1')
-#     if len(states[s])>14 and len(states[s])<20:
-#         print(abbreviationStrings[s]+': '+str(gs.findGonalityFaster(pruneLeaves(dictToGraph(states[s])),True)))
-
-print(str( gs.findGonalityFaster(pruneLeaves(dictToGraph(NY)),0,True)))
-
-# AL: 4
-# AK: 1
-# AZ: 6
-# AR: 3
-# CA: ≤ 40: (2, 0, 0, 2, 0, 1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 3, 4, 3, 2, 1, 0, 0, 4, 0, 1, 0, 1, 0, 2, 1, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-# CO: 5
-# CT: 3
-# DE: 1
-# FL: 8<, ≤13 : (0, 1, 0, 1, 1, 1, 1, 3, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) on pruned
-# GA: 8
-# HI: 1
-# ID: 1
-# IL: 9
-# IN: 5
-# IA: 2
-# KS: 2
-# KY: 3
-# LA: 3
-# ME: 1
-# MD: 4
-# MA: 3
-# MI: 7
-# MN: 4
-# MS: 2
-# MO: 3
-# MT: 1
-# NE: 2
-# NV: 2
-# NH: 1
-# NJ: 4
-# NM: 2
-# NY: 4<, ≤10: (0, 1, 1, 0, 1, 0, 3, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-# NC: 6
-# ND: 1
-# OH: 8
-# OK: 3
-# OR: 3
-# PA: 8
-# RI: 1
-# SC: 3
-# SD: 1
-# TN: 3
-# TX: ≤28: (1, 0, 0, 0, 1, 2, 2, 3, 1, 2, 2, 1, 0, 1, 0, 3, 3, 1, 0, 0, 2, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-# UT: 2
-# VT: 1
-# VA: 5
-# WA: 6
-# WV: 1
-# WI: 4
-# WY: 1
