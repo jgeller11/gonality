@@ -97,7 +97,10 @@ def findGonalityFaster(graph, suppressOutput=False,symmetry=False):
             acceptable = True
             for i in range(len(p)):
                 if acceptable:
-                    if p[i]==0:
+                    if p[i]>=-1*fireList[i][i]:
+                        acceptable=False
+                        next=-2
+                    elif p[i]==0:
                         tp = p.copy()
                         tp[i]=-1
                         current = set()
@@ -217,8 +220,16 @@ def randomGonalityUpperBound(graph, k=0, suppressOutput=False):
     count = 0
     while True:
         p=[0 for i in range(n)]
-        for i in range(k):
-            p[math.floor(random.random()*k)]+=1
+        
+        invalid = True
+
+        while invalid:
+            invalid=False
+            for i in range(k):
+                p[math.floor(random.random()*k)]+=1
+                if p[i]>=-1*fireList[i][i]:
+                    invalid=True
+                    break
         count += 1
         tup = tuple(p)
         for t in range(n):
