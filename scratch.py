@@ -23,7 +23,7 @@ import gonalitysolver as gs
 #     if len(states[s])>14 and len(states[s])<20:
 #         print(abbreviationStrings[s]+': '+str(gs.findGonalityFaster(pruneLeaves(dictToGraph(states[s])),True)))
 
-print(str( gs.randomGonalityUpperBound(sg.pruneLeaves(sg.dictToGraph(sg.NY)),9,True)))
+# print(str( gs.randomGonalityUpperBound(sg.pruneLeaves(sg.dictToGraph(sg.NY)),9,True)))
 # print(str( gs.findGonalityFaster(pruneLeaves(dictToGraph(NY)),0,True)))
 
 
@@ -32,4 +32,4 @@ print(str( gs.randomGonalityUpperBound(sg.pruneLeaves(sg.dictToGraph(sg.NY)),9,T
 # print(gs.findGonalityFaster(sg.pruneLeaves(sg.dictToGraph(sg.GA)), False)) #11.21 user, 0.47 system ; 8.74s user, 0.43s system with fix
 # print(gs.findGonalityFaster(sg.pruneLeaves(sg.dictToGraph(sg.IL)), False)) #135.47 user, 5.73 system; 128.80s user 5.16s with fix 
 
-# sg.graphState(sg.NY, False)
+sg.graphState(sg.CA, False)

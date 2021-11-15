@@ -37,9 +37,6 @@ def checkWinnable(c, graph, degrees):
             # go back and check if this is ever necessary for gonality game
 
     return (len(beenBorrowed)!=n)
-        
-
-        # only add to queue if -1
 
 
 def zeroIndex(state):
@@ -79,7 +76,7 @@ def gonality(graph, startFrom=0):
             d=[1+tup[0]]+[0]*(n-2)+[k-1-tup[-1]]
             for t in range(1,n-1):
                 d[t]+=tup[t]-tup[t-1]
-                # 
+                
                 # i added this and had it skip the rest if too many chips were on one
                 # vertex, but it seemed to only make it slower :(
                 #
