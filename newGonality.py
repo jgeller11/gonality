@@ -5,6 +5,19 @@ import itertools
 import queue
 import networkx as nx
 import math
+import random 
+
+# returns adjacenct list for harary graph n, k (only when k even)
+def harary(n,k):
+    output=[]
+    for i in range(n):
+        s = set()
+        for j in range(1,k//2+1):
+            s.add((i+n+j)%n)
+            s.add((i+n-j)%n)
+        output.append(s)
+    print(output)
+    return output
 
 # returns treewidth of a graph
 def tw(graph):
@@ -139,49 +152,83 @@ def pruneLeaves(graph):
     return graph
 
 # calculates gonality
-def gonality(graph, startFrom=0,progressUpdates=False):
+def gonality(graph, startFrom=0, startFromConfig=0, progressUpdates=False):
     n=len(graph)
-    degrees = degreeList(graph)
 
     k=max(startFrom, tw(graph))
 
     while True:
+        count = 0
         if progressUpdates:
-            count = 0
+            
             print('Checking '+str(k),end='\r')
         for tup in itertools.combinations_with_replacement(range(0,k),n-1):
-            count+=1
-            if not(count%10000) and progressUpdates:
-                print('Checking '+str(k)+', at '+str(count)+'/'+str(int(math.factorial(k+n-2)/(math.factorial(k-1)*math.factorial(n-1)))),end='\r')
-            wins = True
             
-            d=[1+tup[0]]+[0]*(n-2)+[k-1-tup[-1]]
+            count+=1
+            
+            if count>startFromConfig:
+                
+                if not(count%10000) and progressUpdates:
+                    print('Checking '+str(k)+', at '+str(count)+'/'+str(int(math.factorial(k+n-2)/(math.factorial(k-1)*math.factorial(n-1)))),end='\r')
+                wins = True
+                
+                d=[1+tup[0]]+[0]*(n-2)+[k-1-tup[-1]]
 
-            for t in range(1,n-1):
-                d[t]+=tup[t]-tup[t-1]
+                for t in range(1,n-1):
+                    d[t]+=tup[t]-tup[t-1]
 
-            for i in range(1,n):
-                if d[i]==0:
-                    
-                    c=d.copy()
-                    
-                    c[i]=-1
+                for i in range(1,n):
+                    if d[i]==0:
+                        
+                        # c=d.copy()
+                        
+                        # c[i]=-1
 
-                    if not qReducedCheckWins(c, graph, i, n):
-                        wins=False
-                        break
+                        if not qReducedCheckWins(d.copy(), graph, i, n):
+                            wins=False
+                            break
 
-            if wins:
-                print(d)
-                return k
+                if wins:
+                    print(d)
+                    return k
         k+=1
 
-# checks if a divisor is winnable by q-reducing it
+# works from top down to randomly find divisors that win gonality game.
+def randomGonalityUpperBound(graph,k=0):
+    n=len(graph)
+    if k==0:
+        k=n
+    
+    while True:
+        wins = True
+
+        d=[1]+[0]*(n-1)
+
+        for i in range(k):
+            d[math.floor(random.random()*n)]+=1
+
+        for i in range(1,n):
+            if d[i]==0:
+                
+                c=d.copy()
+                
+                c[i]=-1
+
+                if not qReducedCheckWins(c, graph, i, n):
+                    wins=False
+                    break
+
+        if wins:
+            print('upper bound of '+str(k)+': '+str(d))
+            randomGonalityUpperBound(graph,k-1)
+
+
+# checks if a divisor can move a chip to q
 def qReducedCheckWins(c, graph, q, n):
     burnt = checkQReduced(c, graph, q, n)
     if len(burnt)==n:
         return False
-    while c[q]<0:
+    while c[q]<1:
         burnt = checkQReduced(c, graph, q, n)
         if len(burnt)==n:
             return False
@@ -191,37 +238,8 @@ def qReducedCheckWins(c, graph, q, n):
 #     if len(sg.states[s])==1 or len(pruneLeaves(zeroIndex(sg.states[s])))==1:
 #         print(sg.abbreviationStrings[s]+': 1')
 #     elif len(sg.states[s])<20:
-#         print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
+        # print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
 
-NYBetter = {
-    1: {2, 3},
-    2: {1, 3, 4},
-    3: {1, 2, 4, 5, 6, 14},
-    4: {2, 3, 5},
-    5: {3, 4, 6, 7, 8},
-    6: {3, 5, 7, 12, 14},
-    7: {5, 6, 8, 9, 10, 11, 12},
-    8: {5, 7, 9, 11},
-    9: {7, 8, 10, 11},
-    10: {7, 9, 11, 12, 13},
-    11: {7, 8, 9, 10},
-    12: {6, 7, 10, 13, 14},
-    13: {10, 12, 14, 15, 16},
-    14: {3, 6, 12, 13, 15, 16},
-    15: {13, 14},
-    16: {13, 14, 17},
-    17: {16, 18, 19, 20},
-    18: {17, 19},
-    19: {17, 18, 20},
-    20: {17, 19, 21, 22},
-    21: {20, 22, 25},
-    22: {20, 21, 23, 25},
-    23: {22, 25},
-    24: {25},
-    25: {21, 22, 23, 24}
-}
+# print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.GA))))))
+# randomGonalityUpperBound(sortGraph(pruneLeaves(zeroIndex(sg.CA))))
 
-print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.FL))),startFrom=10, progressUpdates=True)))
-
-# add progress updates in function
-# ignore divisors that place more than the degree of the vertex (tried, maybe didn't help?)
