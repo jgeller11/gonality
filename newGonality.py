@@ -240,6 +240,6 @@ def qReducedCheckWins(c, graph, q, n):
 #     elif len(sg.states[s])<20:
         # print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
 
-# print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.GA))))))
+print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.IL))))))
 # randomGonalityUpperBound(sortGraph(pruneLeaves(zeroIndex(sg.CA))))
 

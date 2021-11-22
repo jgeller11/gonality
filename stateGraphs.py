@@ -616,3 +616,12 @@ NYBetter = {
     24: {25},
     25: {21, 22, 23, 24}
 }
+
+def adjacencyStringFromState(state):
+    output=[[0 for i in range(len(state))].copy() for j in range(len(state))]
+    for i in range(1,len(state)+1):
+        for r in state[i]:
+            output[i-1][r-1]=1
+    return str(output).replace('[','{').replace(']','}')
+
+print(adjacencyStringFromState(NY))
