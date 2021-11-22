@@ -624,4 +624,4 @@ def adjacencyStringFromState(state):
             output[i-1][r-1]=1
     return str(output).replace('[','{').replace(']','}')
 
-print(adjacencyStringFromState(NY))
+print(adjacencyStringFromState(NC))

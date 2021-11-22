@@ -1,40 +1,9 @@
-# assume graph is an adjacency list of a simple graph as an array of sets, graph[0]={2,4,5}
-from networkx.classes.function import degree
 import stateGraphs as sg
 import itertools
 import queue
 import networkx as nx
 import math
 import random 
-
-def combs(n,r):
-    # combinations_with_replacement('ABC', 2) --> AA AB AC BB BC CC
-    # pool = tuple(iterable)
-    # n = len(pool)
-    if not n and r:
-        return
-    indices = [0] * r
-    yield indices
-    while True:
-        for i in reversed(range(r)):
-            if indices[i] != n - 1:
-                break
-        else:
-            return
-        indices[i:] = [indices[i] + 1] * (r - i)
-        yield indices
-
-# returns adjacenct list for harary graph n, k (only when k even)
-def harary(n,k):
-    output=[]
-    for i in range(n):
-        s = set()
-        for j in range(1,k//2+1):
-            s.add((i+n+j)%n)
-            s.add((i+n-j)%n)
-        output.append(s)
-    print(output)
-    return output
 
 # returns treewidth of a graph
 def tw(graph):
@@ -143,13 +112,6 @@ def sortGraph(graph):
         output.append({newOrder.index(j) for j in graph[newOrder[i]]})
     return output
 
-# fixes the graphs as they're written in stateGraphs.py to be zero-indexed
-def zeroIndex(state):
-    output = []
-    for i in range(1,1+len(state)):
-        output.append({k-1 for k in state[i]})
-    return output
-
 # cuts leaves off of a graph
 def pruneLeaves(graph):
     i=0
@@ -179,8 +141,8 @@ def gonality(graph, startFrom=0, startFromConfig=0, progressUpdates=False):
         if progressUpdates:
             
             print('Checking '+str(k),end='\r')
-        # for tup in itertools.combinations_with_replacement(range(0,k),n-1):
-        for tup in combs(k,n-1):    
+        for tup in itertools.combinations_with_replacement(range(0,k),n-1):
+            
             count+=1
             
             if count>startFromConfig:
@@ -253,13 +215,3 @@ def qReducedCheckWins(c, graph, q, n):
             return False
     return True
 
-# for s in range(len(sg.states)):
-#     if len(sg.states[s])==1 or len(pruneLeaves(zeroIndex(sg.states[s])))==1:
-#         print(sg.abbreviationStrings[s]+': 1')
-#     elif len(sg.states[s])<20:
-        # print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
-print(gonality(sortGraph(pruneLeaves(zeroIndex(sg.IL))),progressUpdates= True))
-# print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.GA))))))
-# randomGonalityUpperBound(sortGraph(pruneLeaves(zeroIndex(sg.CA))))
-
-# print(sortGraph(pruneLeaves(zeroIndex(sg.IL))))
