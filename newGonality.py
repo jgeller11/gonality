@@ -36,6 +36,18 @@ def harary(n,k):
     print(output)
     return output
 
+def adjacencyStringFromGraph(state):
+    output=[[0 for i in range(len(state))].copy() for j in range(len(state))]
+    for i in range(len(state)):
+        for r in state[i]:
+            output[i][r]=1
+    return str(output).replace('[','{').replace(']','}')
+
+print(adjacencyStringFromGraph(harary(22,6)))
+#18: 14 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6]
+#20: 15 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 6]
+#22: hard ?
+
 # returns treewidth of a graph
 def tw(graph):
     G = nx.Graph()
@@ -258,7 +270,7 @@ def qReducedCheckWins(c, graph, q, n):
 #         print(sg.abbreviationStrings[s]+': 1')
 #     elif len(sg.states[s])<20:
         # print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
-print(gonality(sortGraph(pruneLeaves(zeroIndex(sg.IL))),progressUpdates= True))
+# print(gonality(sortGraph(pruneLeaves(zeroIndex(sg.IL))),progressUpdates= True))
 # print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.GA))))))
 # randomGonalityUpperBound(sortGraph(pruneLeaves(zeroIndex(sg.CA))))
 
