@@ -9,7 +9,8 @@ class DegreeIterator implements Iterator<int[]> {
     public DegreeIterator(int degree, int length) {
         current = new int[length];
         max = degree;
-        current[length - 1] = degree;
+        current[length - 1] = degree-1;
+        current[0] = 1;
     }
 
     public boolean hasNext() {

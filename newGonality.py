@@ -33,7 +33,6 @@ def harary(n,k):
             s.add((i+n+j)%n)
             s.add((i+n-j)%n)
         output.append(s)
-    print(output)
     return output
 
 def adjacencyStringFromGraph(state):
@@ -43,7 +42,7 @@ def adjacencyStringFromGraph(state):
             output[i][r]=1
     return str(output).replace('[','{').replace(']','}')
 
-print(adjacencyStringFromGraph(harary(22,6)))
+# print(adjacencyStringFromGraph(harary(22,6)))
 #18: 14 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6]
 #20: 15 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 6]
 #22: hard ?
@@ -265,6 +264,24 @@ def qReducedCheckWins(c, graph, q, n):
             return False
     return True
 
+for n in range(19,30):
+    d=[0 for i in range(n)]
+    d[0]=2
+    d[1]=3
+    d[2]=3
+    d[-1]=1
+    d[-2]=2
+    d[3]=3
+    g=harary(n,6)
+    works=True
+    for i in range(n):
+        if not qReducedCheckWins(d.copy(),g,i,n):
+            works=False
+    print(str(n)+': '+str(works))
+
+    
+
+
 # for s in range(len(sg.states)):
 #     if len(sg.states[s])==1 or len(pruneLeaves(zeroIndex(sg.states[s])))==1:
 #         print(sg.abbreviationStrings[s]+': 1')
@@ -272,6 +289,9 @@ def qReducedCheckWins(c, graph, q, n):
         # print(sg.abbreviationStrings[s]+': '+str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.states[s]))),True)))
 # print(gonality(sortGraph(pruneLeaves(zeroIndex(sg.IL))),progressUpdates= True))
 # print(str(gonality(sortGraph(pruneLeaves(zeroIndex(sg.GA))))))
-# randomGonalityUpperBound(sortGraph(pruneLeaves(zeroIndex(sg.CA))))
+# randomGonalityUpperBound(harary(34,6),k=27)
+
+# for i in range(19,27):
+#     print('Graph graph'+str(i)+' = new Graph('+adjacencyStringFromGraph(harary(i,6))+');')
 
 # print(sortGraph(pruneLeaves(zeroIndex(sg.IL))))

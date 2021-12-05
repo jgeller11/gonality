@@ -610,11 +610,10 @@ NYBetter = {
     18: {17, 19},
     19: {17, 18, 20},
     20: {17, 19, 21, 22},
-    21: {20, 22, 25},
-    22: {20, 21, 23, 25},
-    23: {22, 25},
-    24: {25},
-    25: {21, 22, 23, 24}
+    21: {20, 22, 24},
+    22: {20, 21, 23, 24},
+    23: {22, 24},
+    24: {21, 22, 23}
 }
 
 def adjacencyStringFromState(state):
@@ -624,3 +623,5 @@ def adjacencyStringFromState(state):
             output[i-1][r-1]=1
     return str(output).replace('[','{').replace(']','}')
 
+print(adjacencyStringFromState(NYBetter))
+# graphState(TX,False)
