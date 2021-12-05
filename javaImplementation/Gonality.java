@@ -8,7 +8,9 @@ class Gonality {
     public static void main(String[] args) {
         System.out.println("running");
         Gonality g = new Gonality();
+        // int[][] adj = new int[][] {{0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1}, {0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1}, {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0}};
         int[][] adj = new int[][] {{0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0}};
+        // int[][] adj = harary(18,3);
         Graph graph = new Graph(adj);
         double startTime = System.currentTimeMillis();
         System.out.println(g.gonality(graph));
@@ -17,19 +19,30 @@ class Gonality {
     }
 
     boolean checkQReducedWinnable(Graph g, int[] divisor, int i, boolean[] pos) {
+        int n = g.size();
+        
+        
         while (true) {
             LinkedList<Integer> l = new LinkedList<>();
             l.add(i);
-            int[] adjBurned = new int[g.size()];
-            HashSet<Integer> burnt = new HashSet<>();
-            burnt.add(i);
+            
+            
+            int[] adjBurned = new int[n];
+            int numBurnt = 1;
+            boolean[] burnt = new boolean[n];
+            burnt[i]=true;
             // burn the graph
-            while (l.size() != 0) {
+            
+            while ((l.size() != 0)&&(numBurnt != n)) {
                 int next = l.remove(0);
+                
                 for (Integer it : g.getNeighbors(next)) {
-                    if (!burnt.contains(it)) {
+                    if (!burnt[it]){
                         if (divisor[it] <= adjBurned[it]) {
-                            burnt.add(it);
+                            if (++numBurnt==n){
+                                return false;
+                            }
+                            burnt[it]=true;
                             adjBurned[it] = 0;
                             l.add(it);
                         } else {
@@ -40,31 +53,25 @@ class Gonality {
             }
             // if not everything burns, then set fire
             // optimization: do it in one pass
-            boolean wins = false;
-            if (burnt.size() != g.size()) {
-                for (int node = 0; node < g.size(); node++) {
-                    if (adjBurned[node] > 0) {
-                        // if node moves chips to q, divisor winnable
-                        // optimization: can we move this check?
-                        if (g.isAdjacent(node, i)) {
-                            wins= true;
-                        }
-                        for (int neighbor : g.getNeighbors(node)) {
-                            if (burnt.contains(neighbor)) {
-                                if (++divisor[neighbor]==1){
-                                    pos[neighbor]=true;
-                                }
+            
+            
+            for (int node = 0; node < n; node++) {
+                if (adjBurned[node] > 0) {
+
+                    for (int neighbor : g.getNeighbors(node)) {
+                        if (burnt[neighbor]){
+                            if (++divisor[neighbor]==1){
+                                pos[neighbor]=true;
                             }
                         }
-                        divisor[node] -= adjBurned[node];
                     }
+                    divisor[node] -= adjBurned[node];
                 }
-                if (wins){
-                    return true;
-                }
-            } else {
-                return false;
             }
+            if (divisor[i]>0){
+                return true;
+            }
+            
         }
 
     }
@@ -91,15 +98,12 @@ class Gonality {
         int[] currentDivisor;
         while (true) {
             System.out.println(deg);
-            // DegreeIterator d = new DegreeIterator(deg, n);
-            DegreeIterator d = new DegreeIterator(deg, n);
+            DegreeIterator d = new DegreeIterator(deg, n, degreeList);
+            // SymmetryDegreeIterator d = new SymmetryDegreeIterator(deg, n, degreeList);
             while (d.hasNext()) {
                 
-                // optimization: keep 1 chip on vertex of max degree
-                // just compute ordered pairs for n-1, then add to vertex of max degree
-                // order vertices in graph from max to min degree
-                // optimization: improve iterator to exclude divisiors
-                // with more chips than degree of vertex
+                // optimization?: order vertices in graph from max to min degree
+
                 currentDivisor = d.next();
                 boolean found = true;
                 // pass in copy of divisor
@@ -127,9 +131,6 @@ class Gonality {
                 }
             }
             deg++;
-
-
         }
     }
-
 }
