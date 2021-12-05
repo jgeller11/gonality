@@ -12,10 +12,7 @@ class DegreeIterator implements Iterator<int[]> {
         max = degree;
         current[length - 1] = degree-1;
         current[0] = 1;
-        degreeList = new int[degrees.length];
-        for (int i = 0; i<degrees.length; i++) { 
-            degreeList[i]=degrees[i];
-        }
+        degreeList = degrees;
     }
 
     public boolean hasNext() {
