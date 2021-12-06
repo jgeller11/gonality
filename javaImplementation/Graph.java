@@ -74,4 +74,26 @@ public class Graph {
         System.out.println(Arrays.toString(nodes));
     }
 
+    public Graph product(Graph g) {
+
+        int size1 = this.size();
+        int size2 = g.size();
+        int[][] l3 = new int[size1 * size2][size1 * size2];
+        for (int i = 0; i < size2; i++) {
+            for (int x = 0; x < size1; x++) {
+                for (int y = 0; y < size1; y++) {
+                    if (this.isAdjacent(x, y)) l3[x + size1*i][y + size1*i] = 1;
+                }
+            }
+        }
+        for (int i = 0; i < size1; i++) {
+            for (int x = 0; x < size2; x++) {
+                for (int y = 0; y < size2; y++) {
+                    if (g.isAdjacent(x, y)) l3[x*size2 + i][y*size2 + i] = 1;
+                }
+            }
+        }
+        return new Graph(l3);
+    }
+
 }
