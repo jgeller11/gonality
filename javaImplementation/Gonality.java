@@ -93,6 +93,31 @@ class Gonality {
         return output;
     }
 
+    static int[][] gridGraph(int n1, int n2, int n3) {
+        int[][] output = new int[n1*n2*n3][n1*n2*n3];
+        for(int i = 0; i < n1*n2*n3; i++){
+            if (i%n1!=n1-1) {
+                output[i][i+1]=1;
+            }
+            if (i%n1!=0) {
+                output[i][i-1]=1;
+            }
+            if ((i/(n1*n2))!=0){
+                output[i][i-n1*n2]=1;
+            }
+            if ((i/(n1*n2))!=n3-1){
+                output[i][i+n1*n2]=1;
+            }
+            if ((i%(n1*n2))>=n1){
+                output[i][i-n1]=1;
+            }
+            if ((i%(n1*n2))<n1*(n2-1)){
+                output[i][i+n1]=1;
+            }
+        }
+        return output;
+    }
+
     int gonality(Graph g) {
         return gonality(g, 1, false);
     }
