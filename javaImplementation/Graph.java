@@ -70,8 +70,8 @@ public class Graph {
         return size;
     }
 
-    public void printAdjList() {
-        System.out.println(Arrays.toString(nodes));
+    public String toString() {
+        return Arrays.toString(nodes);
     }
 
     public Graph product(Graph g) {
@@ -89,11 +89,36 @@ public class Graph {
         for (int i = 0; i < size1; i++) {
             for (int x = 0; x < size2; x++) {
                 for (int y = 0; y < size2; y++) {
-                    if (g.isAdjacent(x, y)) l3[x*size2 + i][y*size2 + i] = 1;
+                    if (g.isAdjacent(x, y)) l3[x*size1 + i][y*size1 + i] = 1;
                 }
             }
         }
         return new Graph(l3);
+    }
+
+    //cycle graph on n vertices
+    public static Graph cycle(int n) {
+        int[][] cycleAdj = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            cycleAdj[i][((i-1) + n) % n] = 1;
+            cycleAdj[i][((i+1) + n) % n] = 1;
+        }
+        return new Graph(cycleAdj);
+    }
+
+    //path graph on n vertices
+    public static Graph path(int n) {
+        int[][] pathAdj = new int[n][n];
+        if (n == 1) {
+            pathAdj = new int[][] {{0}};
+        }
+        pathAdj[0][1] = 1;
+        pathAdj[n-1][n-2] = 1;
+        for (int i = 1; i < n - 1; i++) {
+            pathAdj[i][((i-1) + n) % n] = 1;
+            pathAdj[i][((i+1) + n) % n] = 1;
+        }
+        return new Graph(pathAdj);
     }
 
 }

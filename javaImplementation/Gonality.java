@@ -8,22 +8,22 @@ class Gonality {
     public static void main(String[] args) {
         System.out.println("running");
         Gonality g = new Gonality();
+        //P3xP3xP3: 9
+        //P3xP3xP4: 9
+        //P3xP3xP5: 9
+        //P3xP3xC3: 9
+        //P3xC3xC3: 9
+        //
+      
 
-
-        int[][] pathAdj = new int[][]{{0,1,0},{1,0,1},{0,1,0}};
-        Graph path = new Graph(pathAdj);
-        Graph square = path.product(path);
-        Graph graph = square.product(path);
-        //square.printAdjList();
-        // int[][] adj = new int[][] {{0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1}, {0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1}, {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0}}; // illinois
+        Graph graph = Graph.cycle(3).product(Graph.cycle(3).product(Graph.cycle(3)));
 
         double startTime = System.currentTimeMillis();
-        System.out.println(g.gonality(path));
+        System.out.println(g.gonality(graph, 14, true));
         double time = System.currentTimeMillis() - startTime;
         System.out.println("ran in " + time / 1000 + " s");
 
 
-        //System.out.println(g.gonality(grid));
         //square.printAdjList();
     }
 
@@ -126,7 +126,6 @@ class Gonality {
                     System.out.println("checked " + count + " divisors");
                 }
                 currentDivisor = d.next();
-                System.out.println(Arrays.toString(currentDivisor));
                 boolean found = true;
                 // pass in copy of divisor
 
@@ -157,3 +156,5 @@ class Gonality {
         }
     }
 }
+
+
