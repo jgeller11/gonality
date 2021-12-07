@@ -6,24 +6,26 @@ class DegreeIterator implements Iterator<int[]> {
     private int[] current;
     private int max;
     private int[] degreeList;
+    private boolean first;
     public DegreeIterator(int degree, int length, int[] degrees) {
-        
+        first = true;
         current = new int[length];
         max = degree;
         current[length - 1] = degree-1;
         current[0] = 1;
-        degreeList = new int[degrees.length];
-        for (int i = 0; i<degrees.length; i++) { 
-            degreeList[i]=degrees[i];
-        }
+        degreeList = degrees;
     }
 
     public boolean hasNext() {
+        if (first) return true;
         return current[0] != max;
     }
 
     public int[] next() {
-        
+        if (first) {
+            first = false;
+            return current;
+        }
         boolean p = true;
         while (p) {
             p=false;

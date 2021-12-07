@@ -5,8 +5,9 @@ import java.util.Iterator;
 class SymmetryDegreeIterator implements Iterator<int[]> {
     private int[] current;
     private int max;
+    private boolean first;
     public SymmetryDegreeIterator(int degree, int length, int[] degrees) {
-
+        first = true;
         current = new int[length];
         max = degree;
         current[length - 1] = degree-1;
@@ -14,10 +15,15 @@ class SymmetryDegreeIterator implements Iterator<int[]> {
     }
 
     public boolean hasNext() {
+        if (first) return true;
         return current[0] != max;
     }
 
     public int[] next() {
+        if (first) {
+            first = false;
+            return current;
+        }
         boolean p = true;
         while (p) {
             p = false;

@@ -2,7 +2,7 @@ package javaImplementation;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.HashSet;
+import java.util.Iterator;
 
 class Gonality {
     public static void main(String[] args) {
@@ -14,10 +14,11 @@ class Gonality {
         Graph path = new Graph(pathAdj);
         Graph square = path.product(path);
         Graph graph = square.product(path);
-        System.out.println(graph.size());
-        graph.printAdjList();
+        //square.printAdjList();
+        // int[][] adj = new int[][] {{0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0}, {1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1}, {0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1}, {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0}}; // illinois
+
         double startTime = System.currentTimeMillis();
-        System.out.println(g.gonality(square));
+        System.out.println(g.gonality(path));
         double time = System.currentTimeMillis() - startTime;
         System.out.println("ran in " + time / 1000 + " s");
 
@@ -93,27 +94,39 @@ class Gonality {
     }
 
     int gonality(Graph g) {
-        return gonality(g, 1);
+        return gonality(g, 1, false);
+    }
+
+    int gonality(Graph g, boolean sym) {
+        return gonality(g, 1, sym);
     }
 
     int gonality(Graph g, int deg) {
+        return gonality(g, deg, false);
+    }
+
+    int gonality(Graph g, int deg, boolean sym) {
 
         int[] degreeList = g.degreeList();
         int n = degreeList.length;
         int[] currentDivisor;
         int count = 0;
+        Iterator<int[]> d;
         while (true) {
             System.out.println(deg);
-            DegreeIterator d = new DegreeIterator(deg, n, degreeList);
-            // SymmetryDegreeIterator d = new SymmetryDegreeIterator(deg, n, degreeList);
+            if (sym){
+                d = new SymmetryDegreeIterator(deg, n, degreeList);
+            } else {
+                d = new DegreeIterator(deg, n, degreeList);
+            }
             while (d.hasNext()) {
-
                 // optimization?: order vertices in graph from max to min degree
                 count++;
                 if (count % 100000 == 0) {
                     System.out.println("checked " + count + " divisors");
                 }
                 currentDivisor = d.next();
+                System.out.println(Arrays.toString(currentDivisor));
                 boolean found = true;
                 // pass in copy of divisor
 
