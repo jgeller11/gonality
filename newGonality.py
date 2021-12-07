@@ -5,6 +5,8 @@ import itertools
 import queue
 import networkx as nx
 import math
+import matplotlib as mpl 
+import matplotlib.pyplot as plt
 import random 
 
 def combs(n,r):
@@ -46,6 +48,34 @@ def adjacencyStringFromGraph(state):
 #18: 14 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 0, 0, 0, 6]
 #20: 15 [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 6]
 #22: hard ?
+
+# plot a graph
+def plotGraph(graph, planar=False):
+    G = nx.Graph()
+    for i in range(len(graph)):
+        G.add_node(i)
+    for x in range(len(graph)):
+        for y in graph[x]:
+            G.add_edge(x,y)
+    if planar:
+        pos = nx.planar_layout(G)
+        nx.draw(G, with_labels=True, font_weight='bold', pos=pos)
+    else:
+        nx.draw(G, with_labels=True, font_weight='bold')
+    plt.show()
+
+# creates graph from string of adjacency list from java, like "{{0,1},{1,0}}"
+def graphFromString(s):
+    output = []
+    x = s[2:-2].split('], [')
+    for r in x:
+        rr = r.split(',')
+        t = set()
+        for rrr in rr:
+            t.add(int(rrr))
+        output.append(t)
+    return output
+
 
 # returns treewidth of a graph
 def tw(graph):
@@ -264,7 +294,7 @@ def qReducedCheckWins(c, graph, q, n):
             return False
     return True
 
-for n in range(19,30):
+# for n in range(19,30):
     d=[0 for i in range(n)]
     d[0]=2
     d[1]=3
@@ -279,7 +309,7 @@ for n in range(19,30):
             works=False
     print(str(n)+': '+str(works))
 
-    
+plotGraph(graphFromString('[[1, 2, 3, 22, 23, 24], [0, 2, 3, 4, 23, 24], [0, 1, 3, 4, 5, 24], [0, 1, 2, 4, 5, 6], [1, 2, 3, 5, 6, 7], [2, 3, 4, 6, 7, 8], [3, 4, 5, 7, 8, 9], [4, 5, 6, 8, 9, 10], [5, 6, 7, 9, 10, 11], [6, 7, 8, 10, 11, 12], [7, 8, 9, 11, 12, 13], [8, 9, 10, 12, 13, 14], [9, 10, 11, 13, 14, 15], [10, 11, 12, 14, 15, 16], [11, 12, 13, 15, 16, 17], [12, 13, 14, 16, 17, 18], [13, 14, 15, 17, 18, 19], [14, 15, 16, 18, 19, 20], [15, 16, 17, 19, 20, 21], [16, 17, 18, 20, 21, 22], [17, 18, 19, 21, 22, 23], [18, 19, 20, 22, 23, 24], [0, 19, 20, 21, 23, 24], [0, 1, 20, 21, 22, 24], [0, 1, 2, 21, 22, 23]]'))  
 
 
 # for s in range(len(sg.states)):
