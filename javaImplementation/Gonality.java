@@ -2,29 +2,29 @@ package javaImplementation;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Iterator;
+import java.math.BigInteger;
 
 class Gonality {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.println("running");
         Gonality g = new Gonality();
-        //P3xP3xP3: 9
-        //P3xP3xP4: 9
-        //P3xP3xP5: 9
-        //P3xP3xC3: 9
-        //P3xC3xC3: 9
-        //
-      
-
-        Graph graph = Graph.cycle(3).product(Graph.cycle(3).product(Graph.cycle(3)));
+        // P3xP3xP3: 9
+        // P3xP3xP4: 9
+        // P3xP3xP5: 9
+        // P3xP3xC3: 9
+        // P3xC3xC3: 9
+        // C3xC3xC3 >= 16
+        //196.247
+        Graph graph = Graph.path(3).product(Graph.cycle(4).product(Graph.path(3)));
 
         double startTime = System.currentTimeMillis();
-        System.out.println(g.gonality(graph, 14, true));
+        System.out.println(g.parallelGonality(graph, 1, false));
         double time = System.currentTimeMillis() - startTime;
         System.out.println("ran in " + time / 1000 + " s");
 
-
-        //square.printAdjList();
+        // square.printAdjList();
     }
 
     boolean checkQReducedWinnable(Graph g, int[] divisor, int i, boolean[] pos) {
@@ -110,11 +110,12 @@ class Gonality {
         int[] degreeList = g.degreeList();
         int n = degreeList.length;
         int[] currentDivisor;
-        int count = 0;
+        long count = 0;
+        BigInteger totalNumDivisors = choose(g.size() + deg - 1, g.size());
         Iterator<int[]> d;
         while (true) {
             System.out.println(deg);
-            if (sym){
+            if (sym) {
                 d = new SymmetryDegreeIterator(deg, n, degreeList);
             } else {
                 d = new DegreeIterator(deg, n, degreeList);
@@ -122,8 +123,9 @@ class Gonality {
             while (d.hasNext()) {
                 // optimization?: order vertices in graph from max to min degree
                 count++;
-                if (count % 100000 == 0) {
-                    System.out.println("checked " + count + " divisors");
+                if (count % 1000000 == 0) {
+                    System.out
+                            .println("degree: " + deg + ", " + "checked " + count + " divisors of " + totalNumDivisors);
                 }
                 currentDivisor = d.next();
                 boolean found = true;
@@ -153,8 +155,101 @@ class Gonality {
             }
             count = 0;
             deg++;
+            totalNumDivisors = choose(g.size() + deg - 1, g.size());
         }
+    }
+
+    int parallelGonality(Graph g, int deg, boolean sym) throws Exception {
+        int numCores = 4;
+        int[] degreeList = g.degreeList();
+        int n = degreeList.length;
+        long count = 0;
+        BigInteger totalNumDivisors = choose(g.size() + deg - 1, g.size());
+        while (true) {
+            System.out.println(deg);
+            AtomicBoolean stopWork = new AtomicBoolean(false);
+            for (int i = 0; i < numCores; i++) {
+                Iterator<int[]> d;
+                if (sym) {
+                    d = new SymmetryDegreeIterator(deg, n, degreeList);
+                } else {
+                    d = new DegreeIterator(deg, n, degreeList);
+                }
+                Thread next = new GonalityThread(i, numCores, d, stopWork, n, g, deg);
+                next.start();
+                next.join();
+            }
+
+
+            if (stopWork.get()) {
+                return deg;
+            }
+            deg++;
+            totalNumDivisors = choose(g.size() + deg - 1, g.size());
+        }
+    }
+
+    private BigInteger choose(int n, int k) {
+        if (n < k)
+            return new BigInteger("-1");
+        if (k == 0)
+            return BigInteger.ONE;
+        if (n == k)
+            return BigInteger.ONE;
+        return choose(n - 1, k - 1).multiply(BigInteger.valueOf(n)).divide(BigInteger.valueOf(k));
     }
 }
 
 
+class GonalityThread extends Thread {
+    int offset;
+    Iterator<int[]> iter;
+    AtomicBoolean stopWork;
+    int n;
+    Graph g;
+    int deg;
+    int numCores;
+    public GonalityThread(int offset, int numCores, Iterator<int[]> iter, AtomicBoolean stopWork, int n, Graph g, int deg) {
+        this.offset = offset;
+        this.iter = iter;
+        this.stopWork = stopWork;
+        this.n = n;
+        this.g = g;
+        this.deg = deg;
+        this.numCores = numCores;
+    }
+    public void run() {
+        Gonality obj = new Gonality();
+        int count = 0;
+        while (iter.hasNext() && !stopWork.get()) {
+            int[] currentDivisor = iter.next();
+            if (count % numCores == offset) {
+                boolean found = true;
+                // pass in copy of divisor
+
+                boolean[] pos = new boolean[n];
+                int[] divisorCopy = new int[n];
+                for (int m = 0; m < n; m++) {
+                    divisorCopy[m] = currentDivisor[m];
+                    if (divisorCopy[m] > 0) {
+                        pos[m] = true;
+                    }
+                }
+                for (int i = 1; i < n; i++) {
+                    if ((!pos[i]) && (divisorCopy[i] == 0)) {
+
+                        if (!obj.checkQReducedWinnable(g, divisorCopy, i, pos)) {
+                            found = false;
+                            break;
+                        }
+                    }
+                }
+                if (found) {
+                    System.out.println(Arrays.toString(currentDivisor));
+                    stopWork.set(true);
+                }
+            }
+            count++;
+        }
+    }
+}
