@@ -6,7 +6,7 @@ class SymmetryDegreeIterator implements Iterator<int[]> {
     private int[] current;
     private int max;
     private boolean first;
-    public SymmetryDegreeIterator(int degree, int length, int[] degrees) {
+    public SymmetryDegreeIterator(int degree, int length) {
         first = true;
         current = new int[length];
         max = degree;
@@ -41,7 +41,8 @@ class SymmetryDegreeIterator implements Iterator<int[]> {
                 current[msi + 1] = 0;
             }
             
-            if ((Math.max(++current[msi],current[current.length-1])>current[0])||(current[1]>current[current.length-1])){
+            // if ((Math.max(++current[msi],current[current.length-1])>current[0])||(current[1]>current[current.length-1])){
+            if (Math.max(++current[msi],current[current.length-1])>current[0]){
                 p=true;
             }
             

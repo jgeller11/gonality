@@ -21,10 +21,12 @@ class Gonality {
         // P3xP3xC4: 12
         // C3xC3xC3 >= 16
         // 196.247
-        Graph graph = Graph.path(2).product(Graph.path(3).product(Graph.path(10)));
+
+        Graph graph = Graph.cycle(4).product(Graph.cycle(4));
 
         double startTime = System.currentTimeMillis();
-        System.out.println(g.parallelGonality(graph, 1, false));
+        System.out.println(g.gonality(graph, 6, true));
+        System.out.println(g.parallelGonality(graph, 6, true));
         double time = System.currentTimeMillis() - startTime;
         System.out.println("ran in " + time / 1000 + " s");
 
@@ -85,66 +87,6 @@ class Gonality {
 
     }
 
-    static int[][] harary(int n, int k) {
-        int[][] output = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 1; j <= k; j++) {
-                output[i][(i - j + n) % n] = 1;
-                output[i][(i + j) % n] = 1;
-            }
-        }
-        return output;
-    }
-
-    // generates a random simple graph's adjacency list on n vertices with m edges,
-    // (n)(n-1)/2 > m > n
-    // begins with a cycle to ensure graph is connected, then adds m-n more edges
-    static int[][] randomGraph(int n, int m) {
-        int[][] output = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            output[i][(i + 1) % n] = 1;
-            output[(i + 1) % n][i] = 1;
-        }
-        for (int i = 0; i < (m - n); i++) {
-            boolean edgeBuilt = false;
-            while (!edgeBuilt) {
-                int v1 = (int) (Math.random() * n);
-                int v2 = (int) (Math.random() * n);
-                if ((v1 != v2) && (output[v1][v2] == 0)) {
-                    output[v1][v2] = 1;
-                    output[v2][v1] = 1;
-                    edgeBuilt = true;
-                }
-            }
-        }
-        return output;
-    }
-
-    static int[][] gridGraph(int n1, int n2, int n3) {
-        int[][] output = new int[n1 * n2 * n3][n1 * n2 * n3];
-        for (int i = 0; i < n1 * n2 * n3; i++) {
-            if (i % n1 != n1 - 1) {
-                output[i][i + 1] = 1;
-            }
-            if (i % n1 != 0) {
-                output[i][i - 1] = 1;
-            }
-            if ((i / (n1 * n2)) != 0) {
-                output[i][i - n1 * n2] = 1;
-            }
-            if ((i / (n1 * n2)) != n3 - 1) {
-                output[i][i + n1 * n2] = 1;
-            }
-            if ((i % (n1 * n2)) >= n1) {
-                output[i][i - n1] = 1;
-            }
-            if ((i % (n1 * n2)) < n1 * (n2 - 1)) {
-                output[i][i + n1] = 1;
-            }
-        }
-        return output;
-    }
-
     int gonality(Graph g) {
         return gonality(g, 1, false);
     }
@@ -170,7 +112,7 @@ class Gonality {
             System.out.println(deg);
 
             if (sym) {
-                d = new SymmetryDegreeIterator(deg, n, degreeList);
+                d = new SymmetryDegreeIterator(deg, n);
             } else {
                 d = new DegreeIterator(deg, n, degreeList);
             }
@@ -234,7 +176,7 @@ class Gonality {
             for (int i = 0; i < numCores; i++) {
                 Iterator<int[]> d;
                 if (sym) {
-                    d = new SymmetryDegreeIterator(deg, n, degreeList);
+                    d = new SymmetryDegreeIterator(deg, n);
                 } else {
                     d = new DegreeIterator(deg, n, degreeList);
                 }

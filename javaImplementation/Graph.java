@@ -95,6 +95,43 @@ public class Graph {
         }
         return new Graph(l3);
     }
+    public static Graph harary(int n, int k) {
+    // static int[][] harary(int n, int k) {
+        int[][] output = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j <= k; j++) {
+                output[i][(i - j + n) % n] = 1;
+                output[i][(i + j) % n] = 1;
+            }
+        }
+        return new Graph(output);
+    }
+
+
+    // generates a random simple graph's adjacency list on n vertices with m edges,
+    // (n)(n-1)/2 > m > n
+    // begins with a cycle to ensure graph is connected, then adds m-n more edges
+    public static Graph randomGraph(int n, int m) {
+    // static int[][] randomGraph(int n, int m) {
+        int[][] output = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            output[i][(i + 1) % n] = 1;
+            output[(i + 1) % n][i] = 1;
+        }
+        for (int i = 0; i < (m - n); i++) {
+            boolean edgeBuilt = false;
+            while (!edgeBuilt) {
+                int v1 = (int) (Math.random() * n);
+                int v2 = (int) (Math.random() * n);
+                if ((v1 != v2) && (output[v1][v2] == 0)) {
+                    output[v1][v2] = 1;
+                    output[v2][v1] = 1;
+                    edgeBuilt = true;
+                }
+            }
+        }
+        return new Graph(output);
+    }
 
     //cycle graph on n vertices
     public static Graph cycle(int n) {
